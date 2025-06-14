@@ -1,12 +1,10 @@
 # Managing Hierarchical Data in Laravel: Recursive, Adjacency List, and Nested Set Compared
 
-Working with hierarchical data-stuff like categories, menus, or those wild threaded comments-let's be real,
-it's everywhere in Laravel projects.
-Whether you're hacking away at an e-commerce beast, wrangling file systems,
-or just trying to figure out who reports to who at your company,
-you need some way to store and grab all those tree-like relationships.
+Let's face it: hierarchical data - think categories, menus, or threaded comments - shows up all over Laravel projects.
+Whether you're dealing with an e-commerce catalog, a file directory tree, or the usual corporate who-reports-to-whom mess,
+you need a solid way to handle all those parent-child relationships.
 
-We’re diving into **three different strategies** for managing those category trees in Laravel 12:
+We're diving into **three different strategies** for managing those category trees in Laravel 12:
 
 1. Laravel builtin **recursive relationship**
 2. The **adjacency list + CTE** approach using [`staudenmeir/laravel-adjacency-list`](https://github.com/staudenmeir/laravel-adjacency-list)
@@ -14,7 +12,6 @@ We’re diving into **three different strategies** for managing those category t
 
 We have a 1000-node category tree for an automotive parts catalog.
 We'll walk you through each method, show off how they perform, and spill which ones work best in which situations.
-
 
 ## Setting Up the Recursive Structure: Categories Table
 
@@ -186,7 +183,7 @@ This approach offloads the recursion to the **database engine**, reducing number
 
 The Nested Set Model is a bit different from the classic parent-child setup. 
 Instead, it jams your hierarchy into flat `_lft` and `_rgt` columns, 
-letting you grab the whole tree with a single, super-fast query. No recursion headaches.
+letting you grab the whole tree with a single, superfast query. No recursion headaches.
 
 
 The [nested set model](https://en.wikipedia.org/wiki/Nested_set_model) precomputes hierarchy into `_lft` and `_rgt`
@@ -277,7 +274,7 @@ $this->table(array_keys($measures), [$measures]);
 
 ### Result
 
-Environment: Laravel 12, PHP 8.2, MySQL 8.0 on Intel i5 with 16GB RAM(not exactly supercomputer, but it gets the job done)
+Environment: Laravel 12, PHP 8.2, MySQL 8.0 on Intel i7 with 16GB RAM(not exactly supercomputer, but it gets the job done)
 
 | Recursive   | Adjacency List | Nested Set      |
 |-------------|----------------|-----------------|
@@ -300,7 +297,7 @@ All results reflect average performances from 100 executions but actual performa
 | Adjacency (CTE) | One query, recursion baked right in SQL     | Needs a package, slower in PHP processing  | You want SQL-powered trees with decent depth        |
 | Nested Set      | Blazing fast reads, perfect for giant trees | Tricky to maintain, complex updates        | Your data is read-heavy and don't change it up much |
 
-If you're dealing with a **small, pile of categories**, just use Laravel’s built-in recursion.
+If you're dealing with a **small, pile of categories**, just use Laravel's built-in recursion.
 
 When you **need scalability**, especially for **deep hierarchies**, consider the **Adjacency List**. It offers a balance
 between simplicity and performance.
@@ -311,6 +308,7 @@ wins-but beware of its complexity when modifying the structure (create, move, de
 ## Source Code
 
 You can check out everything I talked about (and probably some extra stuff I forgot to mention) right on GitHub:
+
 👉 **[tegos/laravel-hierarchical-data](https://github.com/tegos/laravel-hierarchical-data)**
 
 Inside, you'll find:
@@ -340,7 +338,7 @@ Inside, you'll find:
 ## Final Thoughts
 
 Managing hierarchical data structures? Not exactly a walk in the park. 
-Laravel gives you plenty of options-whether you’re setting up recursive relationships, leveraging SQL CTEs, or tuning for speed with nested sets.
+Laravel gives you plenty of options-whether you're setting up recursive relationships, leveraging SQL CTEs, or tuning for speed with nested sets.
 
 Each strategy has its place:
 
@@ -348,6 +346,6 @@ Each strategy has its place:
 * **Use adjacency lists** for medium trees and clear SQL recursion.
 * **Choose nested sets** for massive or performance-critical read scenarios.
 
-There’s no universal solution here. Choose the strategy that best fits your data structure, usage patterns, and performance needs.
+There's no universal solution here. Choose the strategy that best fits your data structure, usage patterns, and performance needs.
 Laravel gives you the tools, but the choice? That's all you.
 
